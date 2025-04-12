@@ -32,8 +32,13 @@ async function apiCall<T>(endpoint: string, params: Record<string, string> = {})
   }
 }
 
+// Define types for API response structures
+interface SportMonkResponse {
+  data: any;
+}
+
 // Adapter functions to convert SportsMonk response to our app's data model
-const adaptSeries = (data: any): Series[] => {
+const adaptSeries = (data: SportMonkResponse): Series[] => {
   if (!data || !data.data) return [];
   
   return data.data.map((item: any) => ({
@@ -47,7 +52,7 @@ const adaptSeries = (data: any): Series[] => {
   }));
 };
 
-const adaptMatches = (data: any): Match[] => {
+const adaptMatches = (data: SportMonkResponse): Match[] => {
   if (!data || !data.data) return [];
   
   return data.data.map((item: any) => {
@@ -87,7 +92,7 @@ const adaptMatches = (data: any): Match[] => {
   });
 };
 
-const adaptLiveMatches = (data: any): LiveMatch[] => {
+const adaptLiveMatches = (data: SportMonkResponse): LiveMatch[] => {
   if (!data || !data.data) return [];
   
   return data.data.map((item: any) => {
@@ -117,7 +122,7 @@ const adaptLiveMatches = (data: any): LiveMatch[] => {
   });
 };
 
-const adaptNews = (data: any): News[] => {
+const adaptNews = (data: SportMonkResponse): News[] => {
   if (!data || !data.data || !Array.isArray(data.data)) {
     // For testing, generate mock news when no data is available
     return Array(6).fill(0).map((_, i) => ({
@@ -146,7 +151,7 @@ const adaptNews = (data: any): News[] => {
 export const cricketApi = {
   // Series List
   getSeriesList: async () => {
-    const data = await apiCall("leagues", { include: "season" });
+    const data = await apiCall<SportMonkResponse>("leagues", { include: "season" });
     return {
       status: true,
       message: "Success",
@@ -156,7 +161,7 @@ export const cricketApi = {
   
   // Upcoming Matches
   getUpcomingMatches: async () => {
-    const data = await apiCall("fixtures", { 
+    const data = await apiCall<SportMonkResponse>("fixtures", { 
       filter: "fixtures.status:NS", 
       include: "localteam,visitorteam,venue,league", 
       sort: "starting_at"
@@ -170,7 +175,7 @@ export const cricketApi = {
   
   // Recent Matches
   getRecentMatches: async () => {
-    const data = await apiCall("fixtures", { 
+    const data = await apiCall<SportMonkResponse>("fixtures", { 
       filter: "fixtures.status:Finished", 
       include: "localteam,visitorteam,venue,league", 
       sort: "-starting_at" 
@@ -184,7 +189,7 @@ export const cricketApi = {
   
   // Live Matches
   getLiveMatches: async () => {
-    const data = await apiCall("livescores", { 
+    const data = await apiCall<SportMonkResponse>("livescores", { 
       include: "localteam,visitorteam,venue,league,runs" 
     });
     return {
@@ -196,7 +201,7 @@ export const cricketApi = {
   
   // Match Information
   getMatchInfo: async (matchId: string) => {
-    const data = await apiCall(`fixtures/${matchId}`, { 
+    const data = await apiCall<SportMonkResponse>(`fixtures/${matchId}`, { 
       include: "localteam,visitorteam,venue,league,runs" 
     });
     const matches = adaptMatches({ data: [data.data] });
@@ -209,7 +214,7 @@ export const cricketApi = {
   
   // Live Match
   getLiveMatch: async (matchId: string) => {
-    const data = await apiCall(`fixtures/${matchId}`, { 
+    const data = await apiCall<SportMonkResponse>(`fixtures/${matchId}`, { 
       include: "localteam,visitorteam,venue,league,runs" 
     });
     const matches = adaptLiveMatches({ data: [data.data] });
@@ -224,7 +229,7 @@ export const cricketApi = {
   getNewsList: async () => {
     // Try to fetch news, or generate mock data
     try {
-      const data = await apiCall("news");
+      const data = await apiCall<SportMonkResponse>("news");
       return {
         status: true,
         message: "Success",
@@ -244,7 +249,7 @@ export const cricketApi = {
   getNewsDetail: async (newsId: string) => {
     // Try to fetch specific news, or generate mock data
     try {
-      const data = await apiCall(`news/${newsId}`);
+      const data = await apiCall<SportMonkResponse>(`news/${newsId}`);
       const newsItems = adaptNews({ data: [data.data] });
       return {
         status: true,
