@@ -1,6 +1,6 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { cricketApi } from "@/services/apiService";
+import { cricketApi, apiState } from "@/services/apiService";
 import { useParams } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,6 +8,7 @@ import { Calendar, ArrowLeft } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import MockDataIndicator from "@/components/MockDataIndicator";
 
 const NewsDetailPage = () => {
   const { newsId = "" } = useParams<{ newsId: string }>();
@@ -40,6 +41,10 @@ const NewsDetailPage = () => {
   
   return (
     <div className="container mx-auto px-4 py-8">
+      {apiState.usingMockData && (
+        <MockDataIndicator />
+      )}
+      
       <Button variant="ghost" asChild className="mb-8">
         <Link to="/news" className="flex items-center">
           <ArrowLeft size={16} className="mr-2" /> Back to News

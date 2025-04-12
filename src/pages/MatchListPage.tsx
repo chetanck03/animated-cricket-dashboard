@@ -1,10 +1,11 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { cricketApi } from "@/services/apiService";
+import { cricketApi, apiState } from "@/services/apiService";
 import MatchCard from "@/components/MatchCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardHeader } from "@/components/ui/card";
 import { useNavigate, useParams } from "react-router-dom";
+import MockDataIndicator from "@/components/MockDataIndicator";
 
 type MatchType = "upcoming" | "recent";
 
@@ -38,6 +39,10 @@ const MatchListPage = () => {
   
   return (
     <div className="container mx-auto px-4 py-8">
+      {apiState.usingMockData && (
+        <MockDataIndicator />
+      )}
+      
       <h1 className="text-3xl font-bold mb-8">{title}</h1>
       
       {isLoading ? (

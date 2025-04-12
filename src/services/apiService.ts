@@ -1,4 +1,3 @@
-
 import { ApiResponse, LiveMatch, Match, News, Player, PointsTableEntry, PlayerRanking, Scorecard, Series, TeamRanking } from "@/lib/types";
 
 // SportsMonk Cricket API configuration
@@ -10,8 +9,19 @@ interface SportMonkResponse {
   data: any;
 }
 
+// Track mock data usage
+export const apiState = {
+  usingMockData: false,
+  setUsingMockData: (value: boolean) => {
+    apiState.usingMockData = value;
+  }
+};
+
 // Helper function for API calls
 async function apiCall<T>(endpoint: string, params: Record<string, string> = {}): Promise<T> {
+  // Reset mock data flag on each call
+  apiState.setUsingMockData(false);
+  
   // Add API key to all requests
   params.api_token = API_KEY;
   
@@ -40,6 +50,8 @@ async function apiCall<T>(endpoint: string, params: Record<string, string> = {})
     return result as T;
   } catch (error) {
     console.error("API request error:", error);
+    // Set mock data flag
+    apiState.setUsingMockData(true);
     // For demo purposes, return mock data structure
     console.log("Returning mock data instead");
     return getMockData(endpoint) as T;

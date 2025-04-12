@@ -1,9 +1,10 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { cricketApi } from "@/services/apiService";
+import { cricketApi, apiState } from "@/services/apiService";
 import NewsCard from "@/components/NewsCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardHeader } from "@/components/ui/card";
+import MockDataIndicator from "@/components/MockDataIndicator";
 
 const NewsPage = () => {
   const { data, isLoading, error } = useQuery({
@@ -22,6 +23,10 @@ const NewsPage = () => {
   
   return (
     <div className="container mx-auto px-4 py-8">
+      {apiState.usingMockData && (
+        <MockDataIndicator />
+      )}
+      
       <h1 className="text-3xl font-bold mb-8">Cricket News</h1>
       
       {isLoading ? (
