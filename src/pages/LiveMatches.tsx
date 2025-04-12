@@ -5,7 +5,7 @@ import LiveScoreCard from "@/components/LiveScoreCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardHeader } from "@/components/ui/card";
 import { useState, useEffect } from "react";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 const LiveMatches = () => {
   const [lastUpdate, setLastUpdate] = useState(new Date());
