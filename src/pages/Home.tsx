@@ -16,8 +16,9 @@ const Home = () => {
       />
       
       <LiveMatchesSection 
+        elementId="live-matches"
         registerRef={registerRef}
-        isVisible={true}
+        isVisible={visibleElements.has("live-matches")}
       />
       
       <MatchesTabsSection 
