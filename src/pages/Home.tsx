@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { cricketApi } from "@/services/apiService";
 import LiveScoreCard from "@/components/LiveScoreCard";
@@ -14,12 +13,12 @@ import { useRef, useEffect, useState } from "react";
 
 const Home = () => {
   const [visibleElements, setVisibleElements] = useState<Set<string>>(new Set());
-  const elementsRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const elementsRef = useRef<{ [key: string]: HTMLElement | null }>({});
   
   const { data: liveMatches, isLoading: isLoadingLive } = useQuery({
     queryKey: ["liveMatches"],
     queryFn: () => cricketApi.getLiveMatches(),
-    refetchInterval: 30000, // Refetch every 30 seconds for live data
+    refetchInterval: 30000,
   });
   
   const { data: upcomingMatches, isLoading: isLoadingUpcoming } = useQuery({
@@ -37,7 +36,6 @@ const Home = () => {
     queryFn: () => cricketApi.getNewsList(),
   });
   
-  // Handle animation on scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -79,7 +77,6 @@ const Home = () => {
         </div>
       </div>
       
-      {/* Live Matches Section */}
       <section className="mb-12">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">Live Matches</h2>
@@ -128,7 +125,6 @@ const Home = () => {
         )}
       </section>
       
-      {/* Matches Tabs Section */}
       <section
         id="matches-tabs"
         ref={(el) => (elementsRef.current["matches-tabs"] = el)}
@@ -209,7 +205,6 @@ const Home = () => {
         </Tabs>
       </section>
       
-      {/* News Section */}
       <section
         id="news-section"
         ref={(el) => (elementsRef.current["news-section"] = el)}
